@@ -10,10 +10,8 @@ A Single Page App helper
 ```
 ### Usage
 ```javascript
-const pages = new pageHandler(pageSets);
-const pageSets = [pageSet1, pageSet2, ...];
-const pageSet1 = {
-  name: 'name',
+var pageSet1 = {
+  name: 'name',
   url: 'url',
   content: 'content',
   element: HTMLElement,
@@ -23,6 +21,8 @@ const pageSet1 = {
   onHide: onHide(),
   onDistory: onDistory(),
 };
+var pageSets = [pageSet1, pageSet2, ...];
+var pages = new pageHandler(pageSets);
 ```
 ## Common Props
 
@@ -31,7 +31,7 @@ const pageSet1 = {
 |**`name *`**|String|An identify to the page.|
 |**`url`**|String|An url to make an Ajax call.|
 |**`content`**|String|A string of HTML to create content.|
-|**`element`**|HTML Element|The TextInput component.|
+|**`element`**|HTMLElement|The TextInput component.|
 |**`cloneNode`**|bool|if true will copy the Element to the page.|
 |**`onCreate`**|function|Called after page loaded.|
 |**`onShow`**|function|Called before page show.|
@@ -50,7 +50,7 @@ pageHandler.add();
 
 | Function | Parameter | Description |
 |---|---|---|
-|add|replaceld, pageSet|Add a page to pageHandler.(Will replace page, if pageName exists and replaceld is set to true.)|
+|add|replaceOld, pageSet|Add a page to pageHandler.(Will replace page, if pageName exists and replaceOld is set to true.)|
 |remove|pagename|Remove a page with pagename.|
 |show|pagename|Show a page.|
 |getPageFragments|pagename|Get page fragments with pagename(An array of fragment).|
@@ -62,13 +62,15 @@ A unit in page,it can be changed
 
 ```javascript
 fragment.update();
+fragment.setData(data);
+fragment.getCurrentData();
 ```
 
-| Function | Description |
-|---|---|
-|update|Update the template in the fragment.|
-|setData|Set data.|
-|getCurrentData|Get data.|
+| Function | Parameter | Description |
+|---|---|---|
+|update| - |Update the template in the fragment.|
+|setData| data |Set data.|
+|getCurrentData| - |Get data.|
 
 ### template
 A part of fragment, it can write javascript and call like a function.
