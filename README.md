@@ -31,9 +31,9 @@ pageHandler.getPageFragments(pagename) : get page fragments with pagename(a arra
 pageHandler.setPageOnShow|setPageOnHide(pagename,callback) : change page onShow|onHide with pagename and callback
 
 fragment : A unit in page,it can be changed
->fragment.update() : update the template in the fragment
->fragment.setData() : set data.
->fragment.getCurrentData() get data
+>fragment.update() : update the template in the fragment<br>
+>fragment.setData() : set data.<br>
+>fragment.getCurrentData() get data<br>
 
 template: A part of fragment,it can write javascript and call like a function
 
