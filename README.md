@@ -32,7 +32,7 @@ var pages = new pageHandler(pageSets);
 |**`name *`**|String|An identify to the page.|
 |**`url`**|String|An url to make an Ajax call.|
 |**`content`**|String|A string of HTML to create content.|
-|**`element`**|HTMLElement|The TextInput component.|
+|**`element`**|HTMLElement|An Element copy or put it to page|
 |**`cloneNode`**|bool|if true will copy the Element to the page.|
 |**`onCreate`**|function|Called after page loaded.|
 |**`onShow`**|function|Called before page show.|
