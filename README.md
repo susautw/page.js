@@ -1,54 +1,87 @@
 # page.js
 A Single Page App helper
 
-Put lib.js first Page.js second
+## Quick Start Guide
 
-Usage:
-like this
-> var pages = new pageHandler(pageSets:array);
-pageSets is a array to defind a set of pages;
->>var pageSet = [pageSet,pageSet,.....]
->>a pageSet has some part:
->>>{name:str|required,url:str,content:str,element:HTMLElement,cloneNode:bool|false,onCreate:func|pass,onShow:func|pass,onHide:func|pass,onDistory:func|pass}
+### Include in Your HTML
+``` HTML
+<script src="lib.js"></script>
+<script src="Page.js"></script>
+```
+### Usage
+```javascript
+const pages = new pageHandler(pageSets);
+const pageSets = [pageSet1, pageSet2, ...];
+const pageSet1 = {
+  name: 'name',
+  url: 'url',
+  content: 'content',
+  element: HTMLElement,
+  cloneNode: bool,
+  onCreate: onCreate(),
+  onShow: onShow(),
+  onHide: onHide(),
+  onDistory: onDistory(),
+};
+```
+## Common Props
 
->>>name:A Identify to the page
+| Prop | Type | Description |
+|---|---|---|
+|**`name *`**|String|An identify to the page.|
+|**`url`**|String|An url to make an Ajax call.|
+|**`content`**|String|A string of HTML to create content.|
+|**`element`**|HTML Element|The TextInput component.|
+|**`cloneNode`**|bool|if true will copy the Element to the page.|
+|**`onCreate`**|function|Called after page loaded.|
+|**`onShow`**|function|Called before page show.|
+|**`onHide`**|function|Called before page hide.|
+|**`onDestroy`**|function|Called before page removed.|
 
->>>url,content,element:It is page's content,need one to create the page
->>>>url:will use Ajax to get content
+`* Required`
 
->>>>content:A string of HTML to create content
+## Common Behavior
 
->>>>element:A Exists HTMLElement move to page( or Copy the Element to the page ,if cloneNode is true)
+### pageHandler
 
->>>onCreate:call after page loaded (this,dom_content)
+``` javascript
+pageHandler.add();
+```
 
->>>onShow|onHide|onDistory : call after page Show | before page hide | before page removed  (this,dom_content)
+| Function | Parameter | Description |
+|---|---|---|
+|add|replaceld, pageSet|Add a page to pageHandler.(Will replace page, if pageName exists and replaceld is set to true.)|
+|remove|pagename|Remove a page with pagename.|
+|show|pagename|Show a page.|
+|getPageFragments|pagename|Get page fragments with pagename(An array of fragment).|
+|setPageOnShow|pagename, callback|Change page before page show with pagename and callback.|
+|setPageOnHide|pagename, callback|Change page before page removed with pagename and callback.|
 
-pageHandler.add(replaceld,pageSet) : add a page to pageHandler(replace page ,if pageName exists and replaceOld is true)
-pageHandler.remove(pagename) : remove a page with pagename
-pageHandler.show(pagename) : show a page
-pageHandler.getPageFragments(pagename) : get page fragments with pagename(a array of fragment)
-pageHandler.setPageOnShow|setPageOnHide(pagename,callback) : change page onShow|onHide with pagename and callback
+### fragment
+A unit in page,it can be changed
 
-fragment : A unit in page,it can be changed
->fragment.update() : update the template in the fragment<br>
->fragment.setData() : set data.<br>
->fragment.getCurrentData() get data<br>
+```javascript
+fragment.update();
+```
 
-template: A part of fragment,it can write javascript and call like a function
+| Function | Description |
+|update|Update the template in the fragment.|
+|setData|Set data.|
+|getCurrentData|Get data.|
 
-Example:
+### template
+A part of fragment, it can write javascript and call like a function.
 
-&lt;fragment name="test">(name is needed)
- &lt;template&gt;
-    if(data)return data;
-    else return new Data().getTime();
-   &lt;/template&gt;
-data:
-  &lt;template&gt;
-    if(!data)
-      return 'no data';
-  &lt;/template&gt;
- &lt;/fragment&gt;
- 
- >you can set data to change the fragment
+## Example
+
+``` HTML
+<fragment name="test">
+  <template>
+    data || new Date().getTime();
+  </template>
+  <template>
+    !data && 'no data';
+  </template>
+</fragment>
+```
+>You can set data to change the fragment.
