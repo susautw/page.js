@@ -63,6 +63,9 @@ pageHandler.add();
 A unit in page,it can be changed
 
 ```javascript
+var fragments pageHandler.getPageFragments('name');
+var fragment = fragments['test'] //use fragment name to access
+
 fragment.update();
 fragment.setData(data);
 fragment.getCurrentData();
