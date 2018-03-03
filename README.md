@@ -22,8 +22,9 @@ var pageSet1 = {
   onDistory: onDistory(),
 };
  ...
-var pageSets = [pageSet1, pageSet2, ...];
-var pages = new pageHandler(pageSets);
+var pageSets = [pageSet1, pageSet2, ...]; 
+//firstPage is a name in pageSets,firstPage will load when pageHandler Created.
+var pages = new pageHandler(firstPage,pageSets);
 ```
 ## Common Props
 
