@@ -37,7 +37,7 @@ var pages = new pageHandler(firstPage,pageSets);
 |**`cloneNode`**|bool|if true will copy the Element to the page.|
 |**`onCreate`**|function|Called after page loaded.|
 |**`onShow`**|function|Called before page show.|
-|**`onHide`**|function|Called before page hide.|
+|**`onHide`**|function|Called after page hide.|
 |**`onDestroy`**|function|Called before page removed.|
 
 `* Required`
