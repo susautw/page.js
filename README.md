@@ -21,6 +21,7 @@ var pageSet1 = {
   onHide: onHide(),
   onDistory: onDistory(),
 };
+ ...
 var pageSets = [pageSet1, pageSet2, ...];
 var pages = new pageHandler(pageSets);
 ```
