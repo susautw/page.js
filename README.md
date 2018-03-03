@@ -67,6 +67,7 @@ fragment.getCurrentData();
 ```
 
 | Function | Parameter | Description |
+|---|---|---|
 |update| - |Update the template in the fragment.|
 |setData| data |Set data.|
 |getCurrentData| - |Get data.|
