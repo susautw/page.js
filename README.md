@@ -80,11 +80,16 @@ A part of fragment, it can write javascript and call like a function.
 ``` HTML
 <fragment name="test">
   <template>
-    data || new Date().getTime();
-  </template>
+    if(data)
+     return data;
+    else
+     return new Date().getTime();
+  </template>
   <template>
-    !data && 'no data';
+    if(!data)
+     return 'no data';
   </template>
+ here can write something
 </fragment>
 ```
 >You can set data to change the fragment.
