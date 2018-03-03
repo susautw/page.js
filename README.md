@@ -12,6 +12,7 @@ pageSets is a array to defind a set of pages;
 >>>{name:str|required,url:str,content:str,element:HTMLElement,cloneNode:bool|false,onCreate:func|pass,onShow:func|pass,onHide:func|pass,onDistory:func|pass}
 
 >>>name:A Identify to the page
+
 >>>url,content,element:It is page's content,need one to create the page
 >>>>url:will use Ajax to get content
 
