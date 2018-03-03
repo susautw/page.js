@@ -6,7 +6,7 @@ A Single Page App helper
 ### Include in Your HTML
 ``` HTML
 <script src="lib.js"></script>
-<script src="Page.js"></script>
+<script src="page.js"></script>
 ```
 ### Usage
 ```javascript
