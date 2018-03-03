@@ -39,6 +39,7 @@ var pages = new pageHandler(pageSets);
 |**`onDestroy`**|function|Called before page removed.|
 
 `* Required`
+`Need to choose one between url,content or element`
 
 ## Common Behavior
 
