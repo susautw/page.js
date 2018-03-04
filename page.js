@@ -33,8 +33,9 @@ function Fragment(native_content) {
     //private var
     var content;
     var backup;
-    var placement = {};
+    var placement = [];
     var templates = [];
+    var onUpdate = pass;
     var data;
 
     //private getter
@@ -51,7 +52,6 @@ function Fragment(native_content) {
 
 
     //public var
-    //this.subFrag = {};
     this.name = $("warpper>fragment", content)[0].getAttribute('name');
     if (!this.name)
         throw new ContentParseFailException("Miss fragment name");
@@ -64,13 +64,6 @@ function Fragment(native_content) {
             templates.push(temp);
         });
 
-        /*var subs = $("warpper>fragment fragment", content);
-        if (subs.length != 0) {
-            subs.forEach(function (item) {
-                var sub = new Fragment(item);
-                _t.subFrag[sub.name] = sub;
-            });
-        }*/
         backup = content.innerHTML;
     }
 
@@ -83,17 +76,20 @@ function Fragment(native_content) {
             item.setData(_data);
         })
     }
+
+    this.setOnUpdate = function (callback) {
+        if (!callback || typeof callback != 'function')
+            return false;
+        onUpdate = callback;
+    }
+
     this.update = function () {
         content.innerHTML = backup;
-        /*for (var key in this.subFrag) {
-            try {
-                this.subFrag[key].update();
-            } catch (e) {console.log(e) }
-        }*/
-
         for (var key in placement) {
             placement[key].parentNode.removeChild(placement[key]);
         }
+
+        placement = [];
 
         var temps = $("warpper>fragment>template", content);
         temps.forEach(function (item, index) {
@@ -101,7 +97,19 @@ function Fragment(native_content) {
         });
 
         var frag = $("warpper>fragment", content)[0];
-        Object.assign(placement, frag.childNodes)
+
+        var nodeHold = document.createElement('div');
+        frag.childNodes.forEach(function (item) {
+            nodeHold.appendChild(item.cloneNode(true));
+        });
+
+
+        onUpdate(nodeHold); //new
+
+
+        nodeHold.childNodes.forEach(function (item) {
+            placement.push(item);
+        });
 
         for (var key in placement) {
             if (placement[key] instanceof Node) {
@@ -139,9 +147,9 @@ function Page(dataset) {
     //exception
     function FailToCreatePageException() { }
     function PageNotLoadedException() { }
-    function RootElementHasBeenUsedException(){}
+    function RootElementHasBeenUsedException() { }
 
-    var defaultData = { name: null, rootElement: $('html')[0],pageWarpper:'body', url: null, content: null, element: null, cloneNode: false, onCreate: pass, onShow: pass, onHide: pass, onDistory: pass };
+    var defaultData = { name: null, rootElement: $('html')[0], pageWarpper: 'body', url: null, content: null, element: null, cloneNode: false, onCreate: pass, onShow: pass, onHide: pass, onDistory: pass };
     var setting = Object.assign(defaultData, dataset);
 
     var content;
@@ -168,7 +176,7 @@ function Page(dataset) {
         throw new MissRequiredParamException('url|content|element');
     if ((typeof setting.name == 'string') ? (setting.name.length <= 0) : (true))
         throw new MissRequiredParamException('name');
-    if((typeof setting.pageWarpper == 'string')? (setting.pageWarpper.length <= 0 || setting.pageWarpper.indexOf(' ') != -1):(true))
+    if ((typeof setting.pageWarpper == 'string') ? (setting.pageWarpper.length <= 0 || setting.pageWarpper.indexOf(' ') != -1) : (true))
         throw new MissRequiredParamException('pageWarpper');
 
     if (!(setting.rootElement instanceof HTMLElement))
@@ -227,7 +235,6 @@ function Page(dataset) {
         }
         isShowing = false;
         nodeScriptReplace(dom_content);
-        //dom_content.css('display', 'none');
         setting.onCreate(_t, dom_content);
     }
 
@@ -237,8 +244,7 @@ function Page(dataset) {
             return true;
         if (contentType == 'url') {
             dom_content = document.createElement(setting.pageWarpper);
-            dom_content.setAttribute("name",setting.name);
-            //setting.rootElement.appendChild(dom_content);
+            dom_content.setAttribute("name", setting.name);
             var _t = this;
             lib.XHRequest({
                 url: content, dataType: "text", success: function (data) {
@@ -246,7 +252,7 @@ function Page(dataset) {
                     parseContent(_t);
                     isLoaded = true;
                     onPageCreate(_t);
-                    try{callback(_t,dom_content)}catch(e){}
+                    try { callback(_t, dom_content) } catch (e) { }
                 }, error: function () { throw new FailToCreatePageException; }
             });
             return;
@@ -254,76 +260,76 @@ function Page(dataset) {
 
         if (contentType == 'html') {
             dom_content = document.createElement(setting.pageWarpper);
-            dom_content.setAttribute("name",setting.name);
+            dom_content.setAttribute("name", setting.name);
             dom_content.classList.add("lib_page");
             dom_content.innerHTML = content;
-            //setting.rootElement.appendChild(dom_content);
             parseContent(this);
             isLoaded = true;
             onPageCreate(this);
-            try{callback(_t,dom_content)}catch(e){}
+            try { callback(_t, dom_content) } catch (e) { }
             return;
         }
 
         if (contentType == 'element') {
             dom_content = document.createElement(setting.pageWarpper);
-            dom_content.setAttribute("name",setting.name);
+            dom_content.setAttribute("name", setting.name);
             dom_content.classList.add("lib_page");
             dom_content.appendChild((setting.cloneNode) ? content.cloneNode(true) : content);
-            //setting.rootElement.appendChild(dom_content);
             parseContent(this);
             isLoaded = true;
             onPageCreate(this);
-            try{callback(_t,dom_content)}catch(e){}
+            try { callback(_t, dom_content) } catch (e) { }
             return;
         }
 
     }
 
     this.show = function (callback) {
-        if(callback != undefined && typeof callback == 'function'){
+        if (callback != undefined && typeof callback == 'function') {
             setting.onShow = callback;
             return;
         }
 
         if (!isLoaded)
             throw new PageNotLoadedException;
-        if(isShowing)
+        if (isShowing)
             return true;
 
-        var test_root = $(setting.pageWarpper,setting.rootElement);
-        if(test_root.length > 1)
+        var test_root = $(setting.pageWarpper, setting.rootElement);
+        if (test_root.length > 1)
             throw new RootElementHasBeenUsedException;
-        if(test_root.length > 0){
-            if(test_root[0].getAttribute('name') == null)
+        if (test_root.length > 0) {
+            if (test_root[0].getAttribute('name') == null)
                 test_root[0].parentNode.removeChild(test_root[0]);
             else
                 return false;
         }
-        //dom_content.css('display', 'block');
-        setting.onShow(this, dom_content);
+        try {
+            setting.onShow(this, dom_content);
+        } catch (e) { }
         setting.rootElement.appendChild(dom_content);
         isShowing = true;
         return true;
     }
 
     this.hide = function (callback) {
-        if(callback != undefined && typeof callback == 'function'){
+        if (callback != undefined && typeof callback == 'function') {
             setting.onHide = callback;
             return;
         }
 
         if (!isLoaded)
             throw new PageNotLoadedException;
-        if(!isShowing)
+        if (!isShowing)
             return;
-        //dom_content.css('display', 'none');
-        try{
+        try {
             setting.rootElement.removeChild(dom_content);
-        }catch(e){}
-        setting.onHide(this, dom_content);
+        } catch (e) { }
+        try {
+            setting.onHide(this, dom_content);
+        } catch (e) { }
         isShowing = false;
-        
+
     }
 
     this.toggle = function () {
@@ -336,12 +342,12 @@ function Page(dataset) {
     this.distory = function () {
         if (!isLoaded)
             throw new PageNotLoadedException;
-        if(isShowing)
+        if (isShowing)
             return false;
         setting.onDistory(this, dom_content);
-        try{
+        try {
             dom_content.parentNode.removeChild(dom_content);
-        }catch(e){}
+        } catch (e) { }
         delete isLoaded;
         delete isShowing;
         delete dom_content;
@@ -350,37 +356,37 @@ function Page(dataset) {
     }
 }
 
-function pageHandler(firstPage,pageSets){
+function pageHandler(firstPage, pageSets) {
     //private vars
-        var pages = {};
-        var showing;
+    var pages = {};
+    var showing;
     //private functions
-    function createPage(pageSet,replaceOld){
-        try{
+    function createPage(pageSet, replaceOld) {
+        try {
             var page = new Page(pageSet);
-            if(pages[page.name] == undefined || (replaceOld && pages[page.name] != showing))
+            if (pages[page.name] == undefined || (replaceOld && pages[page.name] != showing))
                 pages[page.name] = page;
-        }catch(e){}
+        } catch (e) { }
     }
 
 
-    if(!pageSets)
+    if (!pageSets)
         throw new MissRequiredParamException('pageSets');
-    if(!firstPage || typeof firstPage != 'string' || firstPage.length <= 0)
+    if (!firstPage || typeof firstPage != 'string' || firstPage.length <= 0)
         throw new MissRequiredParamException('firstPage');
 
-    if(!Array.isArray(pageSets))
+    if (!Array.isArray(pageSets))
         throw new TypeError('pages is not array');
 
-    pageSets.forEach(function(item){
+    pageSets.forEach(function (item) {
         createPage(item);
     });
 
     //public functions
-    this.remove = function(pagename){
-        if(!pagename || typeof pagename != string || pagename.length == 0 || !pages[pagename])
+    this.remove = function (pagename) {
+        if (!pagename || typeof pagename != string || pagename.length == 0 || !pages[pagename])
             return false;
-        if(!pages[pagename].isLoaded() || pagename == showing)
+        if (!pages[pagename].isLoaded() || pagename == showing)
             return false;
         pages[pagename].distory();
         pages[pagename] = undefined;
@@ -388,55 +394,61 @@ function pageHandler(firstPage,pageSets){
         return true;
     }
 
-    this.add = function(replaceOld,pageSet){
-        createPage(pageSet,replaceOld);
+    this.add = function (replaceOld, pageSet) {
+        createPage(pageSet, replaceOld);
     }
 
 
-    this.show = function(pagename){
+    this.show = function (pagename) {
         var _t = this;
-        if(!pagename || typeof pagename != 'string' || pagename.length == 0 || !pages[pagename])
+        if (!pagename || typeof pagename != 'string' || pagename.length == 0 || !pages[pagename])
             return false;
-        if(pages[pagename].isLoaded()){
-            if(pagename == showing)
+        if (pages[pagename].isLoaded()) {
+            if (pagename == showing)
                 return true;
-            if(showing != undefined){
+            if (showing != undefined) {
                 pages[showing].hide();
             }
             pages[pagename].show();
             showing = pagename;
-        }else{
-            try{
-                pages[pagename].preLoad(function(){_t.show(pagename)});
-            }catch(e){
+        } else {
+            try {
+                pages[pagename].preLoad(function () { _t.show(pagename) });
+            } catch (e) {
                 return false;
             }
         }
         return true;
     }
 
-    this.getPageFragments = function(pagename){
-        if(!pagename || typeof pagename != 'string' || pagename.length == 0 || !pages[pagename])
+    this.getPageFragments = function (pagename) {
+        if (!pagename || typeof pagename != 'string' || pagename.length == 0 || !pages[pagename])
             return false;
         return pages[pagename].fragments;
     }
 
-    this.setPageOnShow = function(pagename,callback){
-        if(!pagename || typeof pagename != 'string' || pagename.length == 0 || !pages[pagename])
+    this.setPageOnShow = function (pagename, callback) {
+        if (!pagename || typeof pagename != 'string' || pagename.length == 0 || !pages[pagename])
             return false;
-        if(callback != undefined && typeof callback == 'function')
+        if (callback != undefined && typeof callback == 'function')
             return false;
         pages[pagename].show(callback);
         return true;
     }
 
-    this.setPageOnHide = function(pagename,callback){
-        if(!pagename || typeof pagename != 'string' || pagename.length == 0 || !pages[pagename])
+    this.setPageOnHide = function (pagename, callback) {
+        if (!pagename || typeof pagename != 'string' || pagename.length == 0 || !pages[pagename])
             return false;
-        if(callback != undefined && typeof callback == 'function')
+        if (callback != undefined && typeof callback == 'function')
             return false;
         pages[pagename].hide(callback);
         return true;
     }
     this.show(firstPage);
 }
+
+(function () {
+    var style = document.createElement('style');
+    style.innerHTML = "fragment{display:none;}";
+    $('head')[0].appendChild(style);
+})()
