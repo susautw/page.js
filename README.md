@@ -99,3 +99,4 @@ A part of fragment, it can write javascript and call like a function.
 </fragment>
 ```
 >You can set data to change the fragment.
+A funny Demo? http://susautw-rin.qov.tw/page.js_demo/?i=1
