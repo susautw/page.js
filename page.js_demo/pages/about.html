@@ -1,0 +1,17 @@
+<a name="home" href>back </a>
+<button>
+    clear arr
+</button>
+<script>
+    $('button')[0].addEventListener('click', function (e) {
+        var frag = pages.getPageFragments('home')['demo'];
+        var data = frag.getCurrentData();
+        data.arr.push(new Date().getTime());
+        frag.setData({ link: data.link, arr: [] });
+    });
+</script>
+<style>
+    body {
+        font-size: 300%;
+    }
+</style>

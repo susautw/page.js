@@ -1,0 +1,17 @@
+<div>
+    test
+</div>
+<fragment name="demo">
+    a simple template demo<br>
+    <template>
+        if(data.more)
+            return '<p>see!</p>';
+    </template>
+    <template>
+        var str = "";
+        str += '<a name = "'+data.link+'" href>click</a>';
+        for(var key in data.arr)
+            str += '<br>'+data.arr[key];
+        return str;
+    </template>
+</fragment>

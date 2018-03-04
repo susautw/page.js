@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Page.js Demo</title>
+    <script src="js/lib.js"></script>
+    <script src="js/page.js"></script>
+    <script>
+        function linkbind(item) {
+            item.addEventListener('click', function (e) {
+                if (!e.defaultPrevented)
+                    e.preventDefault();
+                pages.show(item.getAttribute('name'));
+            });
+        }
+
+
+        var pages;
+        var pageSets = [
+            {
+                name: 'home',
+                url: 'pages/home.html',
+                onCreate: function(_t) {
+                    _t.fragments['demo'].setOnUpdate(function (newDom) {
+                        $('a', newDom).forEach(linkbind);
+                    });
+                    _t.fragments['demo'].setData({link:'about',arr:[0,1,2,3],more:false});
+                },
+                onShow: function(_t){
+                    _t.fragments['demo'].update();
+                }
+
+            },
+
+            {
+                name: 'about',
+                url: 'pages/about.html',
+                onCreate: function(_t,dom){$('a',dom).forEach(linkbind)},
+                onHide:function(){
+                    var frag = pages.getPageFragments('home')['demo'];
+                    var data = frag.getCurrentData();
+                    data.arr.push(new Date().getTime());
+                    frag.setData({link:data.link,arr:data.arr,more:true});
+                }
+            }];
+        pages = new pageHandler('home', pageSets);
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>
