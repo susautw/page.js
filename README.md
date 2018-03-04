@@ -98,5 +98,5 @@ A part of fragment, it can write javascript and call like a function.
  here can write something
 </fragment>
 ```
->You can set data to change the fragment. \n
+>You can set data to change the fragment. \
 `A funny Demo?` http://susautw-rin.qov.tw/page.js_demo/?i=1
