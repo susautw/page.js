@@ -70,6 +70,7 @@ var fragment = fragments['test'] //use fragment name to access
 fragment.update();
 fragment.setData(data);
 fragment.getCurrentData();
+fragmemnt.setOnUpdate(callback);
 ```
 
 | Function | Parameter | Description |
@@ -77,6 +78,7 @@ fragment.getCurrentData();
 |update| - |Update the template in the fragment.|
 |setData| data |Set data.|
 |getCurrentData| - |Get data.|
+|setOnUpdate| callback | call before fragment update. |
 
 ### template
 A part of fragment, it can write javascript and call like a function.
