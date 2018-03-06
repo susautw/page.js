@@ -1,4 +1,3 @@
-var $;
 var pass;
 var animation;
 var MissRequiredParamException;
@@ -519,7 +518,7 @@ function library(polyfill_on) {
     }
 
     //globle functions
-    $ = function (_selector, _element) {
+    this.$ = function (_selector, _element) {
         //[init]
         if (_element == undefined)
             _element = document;
@@ -539,6 +538,7 @@ function library(polyfill_on) {
     }
 
     //public functions
+
     this.XHRequest = function (dataset) {
         if (!checkFills([Object.assign]))
             throw new NeedPolyfillException;
