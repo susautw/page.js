@@ -3,11 +3,13 @@
     clear arr
 </button>
 <script>
-    $('button')[0].addEventListener('click', function (e) {
-        var frag = pages.getPageFragments('home')['demo'];
-        var data = frag.getCurrentData();
-        frag.setData({ link: data.link, arr: [] });
-    });
+    (function ($) {
+        $('button')[0].addEventListener('click', function (e) {
+            var frag = pages.getPageFragments('home')['demo'];
+            var data = frag.getCurrentData();
+            frag.setData({ link: data.link, arr: [] });
+        });
+    })(lib.$)
 </script>
 <style>
     body {

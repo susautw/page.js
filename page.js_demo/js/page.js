@@ -1,4 +1,6 @@
 var lib = new library();
+
+
 function Template(content) {
     //[init]
     if (typeof content != 'string')
@@ -24,6 +26,7 @@ function Fragment(native_content) {
     if (!(native_content instanceof HTMLElement)) {
         throw new MissRequiredParamException('native_content');
     }
+    var $ = lib.$;
 
     if (checkFills([Object.assign, Array.prototype.forEach]));
 
@@ -49,14 +52,14 @@ function Fragment(native_content) {
     content = document.createElement("warpper");
     content.appendChild(native_content.cloneNode(true));
 
-
-
     //public var
     this.name = $("warpper>fragment", content)[0].getAttribute('name');
     if (!this.name)
         throw new ContentParseFailException("Miss fragment name");
 
-    function parseContent(_t) {
+
+    
+    (function () {
         var temps = $("warpper>fragment>template", content);
         temps.forEach(function (item) {
             var temp = new Template(item.innerHTML);
@@ -65,9 +68,13 @@ function Fragment(native_content) {
         });
 
         backup = content.innerHTML;
-    }
+    })()
 
-    parseContent(this);
+    //replace native content with a comment node
+    var replace = document.createComment('Fragment point '+this.name);
+        native_content.parentNode.replaceChild(replace,native_content);
+        native_content = replace;
+
 
     //public methods
     this.setData = function (_data) {
@@ -98,7 +105,7 @@ function Fragment(native_content) {
 
         var frag = $("warpper>fragment", content)[0];
 
-        var nodeHold = document.createElement('div');
+        var nodeHold = document.createDocumentFragment();
         frag.childNodes.forEach(function (item) {
             nodeHold.appendChild(item.cloneNode(true));
         });
@@ -112,14 +119,8 @@ function Fragment(native_content) {
         });
 
         for (var key in placement) {
-            if (placement[key] instanceof Node) {
                 native_content.parentNode.insertBefore(placement[key], native_content);
-            }
-
         }
-        native_content.childNodes.forEach(function (item) {
-            native_content.removeChild(item);
-        });
     }
 
     //makes the object read-only
@@ -130,6 +131,7 @@ function Fragment(native_content) {
 function Page(dataset) {
     if (typeof dataset != 'object')
         throw new MissRequiredParamException('dataset');
+    var $ = lib.$;
     /*definations of dataset
         name :string //this page's name
         rootElement : Element //default:$('html')[0] ,a element used to put page
@@ -332,13 +334,6 @@ function Page(dataset) {
 
     }
 
-    this.toggle = function () {
-        if (isShowing)
-            this.hide();
-        else
-            this.show();
-    }
-
     this.distory = function () {
         if (!isLoaded)
             throw new PageNotLoadedException;
@@ -448,6 +443,7 @@ function pageHandler(firstPage, pageSets) {
 }
 
 (function () {
+    var $ = lib.$;
     var style = document.createElement('style');
     style.innerHTML = "fragment{display:none;}";
     $('head')[0].appendChild(style);

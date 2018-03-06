@@ -49,12 +49,12 @@ function Fragment(native_content) {
     content = document.createElement("warpper");
     content.appendChild(native_content.cloneNode(true));
 
-
-
     //public var
     this.name = $("warpper>fragment", content)[0].getAttribute('name');
     if (!this.name)
         throw new ContentParseFailException("Miss fragment name");
+
+    native_content = native_content.parentNode.replaceChild(document.createComment('Fragment point '+this.name),native_content);
 
     function parseContent(_t) {
         var temps = $("warpper>fragment>template", content);
@@ -112,10 +112,7 @@ function Fragment(native_content) {
         });
 
         for (var key in placement) {
-            if (placement[key] instanceof Node) {
                 native_content.parentNode.insertBefore(placement[key], native_content);
-            }
-
         }
         native_content.childNodes.forEach(function (item) {
             native_content.removeChild(item);

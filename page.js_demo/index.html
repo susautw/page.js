@@ -19,7 +19,8 @@
 
 
         var pages;
-        var pageSets = [
+        (function($){
+            var pageSets = [
             {
                 name: 'home',
                 url: 'pages/home.html',
@@ -47,6 +48,8 @@
                 }
             }];
         pages = new pageHandler('home', pageSets);
+        })(lib.$)
+        
     </script>
 </head>
 
