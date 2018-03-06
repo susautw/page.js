@@ -6,7 +6,6 @@
     $('button')[0].addEventListener('click', function (e) {
         var frag = pages.getPageFragments('home')['demo'];
         var data = frag.getCurrentData();
-        data.arr.push(new Date().getTime());
         frag.setData({ link: data.link, arr: [] });
     });
 </script>
